@@ -16,6 +16,11 @@ builder.Services.Configure<MongoDbSettings>(
 
 builder.Services.AddScoped<DbConnectionFactory>();
 
+builder.Services.AddHttpClient("AuthorAPI", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7242/api/course/");
+});
+
 builder.Services.AddScoped<AuthorRepository>();
 builder.Services.AddScoped<AuthorService>();
 

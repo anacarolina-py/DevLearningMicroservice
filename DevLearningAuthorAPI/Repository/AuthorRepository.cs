@@ -12,53 +12,53 @@ public class AuthorRepository : IAuthorRepository
 	private readonly IMongoCollection<Author> _authorsCollection;
 	private readonly DbConnectionFactory _connection;
 	private readonly ILogger<AuthorRepository> _logger;
-
+	
 	public AuthorRepository(DbConnectionFactory connection, ILogger<AuthorRepository> logger)
 	{
 		_connection = connection;
 		_authorsCollection = _connection.GetMongoCollection();
 		_logger = logger;
-    }
+	}
 
 	public async Task<List<AuthorResponseDto>> GetAllActiveAuthorsAsync()
 	{
-		
-			var authors = await _authorsCollection.Find(author => author.Type == 1).ToListAsync();
 
-			return authors.Select(author => new AuthorResponseDto
-			{
-				Id = author.Id.ToString(),
-				Name = author.Name,
-				Title = author.Title,
-				Image = author.Image,
-				Bio = author.Bio,
-				Url = author.Url,
-				Email = author.Email,
-				Type = author.Type
+		var authors = await _authorsCollection.Find(author => author.Type == 1).ToListAsync();
 
-			}).ToList();
-	
+		return authors.Select(author => new AuthorResponseDto
+		{
+			Id = author.Id.ToString(),
+			Name = author.Name,
+			Title = author.Title,
+			Image = author.Image,
+			Bio = author.Bio,
+			Url = author.Url,
+			Email = author.Email,
+			Type = author.Type
+
+		}).ToList();
+
 	}
 
-    public async Task<List<AuthorResponseDto>> GetAllAuthorsAsync()
-    {
-        var authors = await _authorsCollection.Find(_ => true).ToListAsync();
+	public async Task<List<AuthorResponseDto>> GetAllAuthorsAsync()
+	{
+		var authors = await _authorsCollection.Find(_ => true).ToListAsync();
 
-        return authors.Select(author => new AuthorResponseDto
-        {
-            Id = author.Id.ToString(),
-            Name = author.Name,
-            Title = author.Title,
-            Image = author.Image,
-            Bio = author.Bio,
-            Url = author.Url,
-            Email = author.Email,
-            Type = author.Type
+		return authors.Select(author => new AuthorResponseDto
+		{
+			Id = author.Id.ToString(),
+			Name = author.Name,
+			Title = author.Title,
+			Image = author.Image,
+			Bio = author.Bio,
+			Url = author.Url,
+			Email = author.Email,
+			Type = author.Type
 
-        }).ToList();
-    }
+		}).ToList();
+	}
 
-    public async Task<AuthorResponseDto> GetAuthorByIdAsync(ObjectId id)
+	public async Task<AuthorResponseDto> GetAuthorByIdAsync(ObjectId id)
 	{
 
 		var author = await _authorsCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
@@ -68,8 +68,8 @@ public class AuthorRepository : IAuthorRepository
 
 		return new AuthorResponseDto
 		{
-            Id = author.Id.ToString(),
-            Name = author.Name,
+			Id = author.Id.ToString(),
+			Name = author.Name,
 			Title = author.Title,
 			Image = author.Image,
 			Bio = author.Bio,
@@ -78,13 +78,13 @@ public class AuthorRepository : IAuthorRepository
 			Type = author.Type
 
 		};
-    }
+	}
 
 	public async Task CreateAuthorAsync(CreateAuthorDto author)
 	{
 		try
 		{
-			var newAuthor = new Author (
+			var newAuthor = new Author(
 
 				author.Name,
 				author.Title,
@@ -97,7 +97,7 @@ public class AuthorRepository : IAuthorRepository
 
 			await _authorsCollection.InsertOneAsync(newAuthor);
 		}
-		catch (Exception ex) 
+		catch (Exception ex)
 		{
 			_logger.LogError($"Error creating author");
 
@@ -111,7 +111,7 @@ public class AuthorRepository : IAuthorRepository
 			author.Title,
 			author.Image,
 			author.Bio,
-			author.Url, 
+			author.Url,
 			author.Email
 			);
 
@@ -128,7 +128,7 @@ public class AuthorRepository : IAuthorRepository
 	{
 		var author = await _authorsCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
 
-		 if (author == null) return;
+		if (author == null) return;
 
 		var newType = author.Type == 0 ? 1 : 0;
 
@@ -139,14 +139,18 @@ public class AuthorRepository : IAuthorRepository
 
 	public async Task<ContadorAuthorDto?> SelectAuthorByCourseAsync(ObjectId authorId)
 	{
-		//var sql = @"SELECT COUNT(Id) AS Quantidade FROM Course WHERE AuthorId = @AuthorId";
+		var sql = @"SELECT COUNT(Id) AS Quantidade FROM Course WHERE AuthorId = @AuthorId";
 
-		//using (var con = _connection.GetConnection())
-		//{
-		//	return await con.QueryFirstOrDefaultAsync<ContadorAuthorDto>(sql, new { authorId });	
+		Guid autorGuid;
+		Guid.TryParse(authorId.ToString(), out autorGuid);
+
+		using (var con = _connection.GetConnection())
+		{
+			return await con.QueryFirstOrDefaultAsync<ContadorAuthorDto>(sql, new { authorId });
 
 
-		throw new NotImplementedException();
+			throw new NotImplementedException();
 
+		}
 	}
 }
