@@ -57,17 +57,8 @@ public class AuthorService : IAuthorService
         await _repository.UpdateTypeAuthorAsync(id);
     }
 
-    public async Task<bool> SelectAuthorByCourseAsync(ObjectId authorId)
+    public async Task<ContadorAuthorDto> SelectAuthorByCourseAsync(ObjectId authorId)
     {
-        var author = await _httpClient.GetFromJsonAsync<CourseResponseDto>(authorId);
-
-        if(author.Quantidade > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return await _repository.SelectAuthorByCourseAsync(authorId);
     } 
 }

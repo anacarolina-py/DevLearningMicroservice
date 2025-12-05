@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace Models.Models.Dtos.Author
+namespace Models.Models.Dtos.Course
 {
     public class ContadorAuthorDto
     {
-        [BsonElement("quantidade")]
         public int Quantidade { get; init; }
+        public List<CourseResponseDto> Cursos { get; set; }
     }
 }

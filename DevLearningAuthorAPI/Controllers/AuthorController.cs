@@ -112,11 +112,6 @@ namespace DevLearningAuthorAPI.Controllers
                 if (_service.GetAuthorByIdAsync(id) is null)
                     return NotFound("Register not found!");
 
-                if (await _service.SelectAuthorByCourseAsync(id))
-				{
-					return BadRequest("Não foi possível inutilizar o autor: vínculo entre autor e curso já existe.");
-				}
-
 				await _service.UpdateTypeAuthorAsync(id);
 
 				return NoContent();
@@ -125,6 +120,20 @@ namespace DevLearningAuthorAPI.Controllers
 			{
 				return Problem(ex.Message);
 			}
+		}
+
+		[HttpGet("{id}/courses")]
+		public async Task<ActionResult> SelectAuthorCoursesAsync(string authorId)
+		{
+			if (!ObjectId.TryParse(authorId, out ObjectId objectId))
+				return BadRequest("Id Inválido");
+
+			var result = await _service.SelectAuthorByCourseAsync(objectId);
+
+			if (result is null)
+				return NotFound("Nenhum curso encontrado para esse autor");
+
+			return Ok(result);
 		}
 	}
 }

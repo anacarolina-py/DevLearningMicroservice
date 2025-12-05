@@ -2,6 +2,7 @@
 using DevLearningAuthorAPI.Repository.Interfaces;
 using Models.Models;
 using Models.Models.Dtos.Author;
+using Models.Models.Dtos.Course;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -12,12 +13,17 @@ public class AuthorRepository : IAuthorRepository
 	private readonly IMongoCollection<Author> _authorsCollection;
 	private readonly DbConnectionFactory _connection;
 	private readonly ILogger<AuthorRepository> _logger;
+	private readonly HttpClient _httpClient;
 	
-	public AuthorRepository(DbConnectionFactory connection, ILogger<AuthorRepository> logger)
+	public AuthorRepository(DbConnectionFactory connection, 
+		ILogger<AuthorRepository> logger,
+		HttpClient httpClient)
 	{
 		_connection = connection;
 		_authorsCollection = _connection.GetMongoCollection();
 		_logger = logger;
+		_httpClient = httpClient;
+		_httpClient.BaseAddress = new Uri("https://localhost7242/api/course/author/id");
 	}
 
 	public async Task<List<AuthorResponseDto>> GetAllActiveAuthorsAsync()
@@ -137,20 +143,16 @@ public class AuthorRepository : IAuthorRepository
 		await _authorsCollection.UpdateOneAsync(a => a.Id == id, update);
 	}
 
-	public async Task<ContadorAuthorDto?> SelectAuthorByCourseAsync(ObjectId authorId)
+	public async Task<ContadorAuthorDto> SelectAuthorByCourseAsync(ObjectId authorId)
 	{
-		var sql = @"SELECT COUNT(Id) AS Quantidade FROM Course WHERE AuthorId = @AuthorId";
+		Guid authorGuid;
 
-		Guid autorGuid;
-		Guid.TryParse(authorId.ToString(), out autorGuid);
+		if(!Guid.TryParse(authorId.ToString(), out authorGuid))
+			return null;
 
-		using (var con = _connection.GetConnection())
-		{
-			return await con.QueryFirstOrDefaultAsync<ContadorAuthorDto>(sql, new { authorId });
+		var result = await _httpClient.GetFromJsonAsync<ContadorAuthorDto>($"author/{authorGuid}");
 
-
-			throw new NotImplementedException();
-
+		return result;
 		}
 	}
 }
