@@ -1,0 +1,56 @@
+﻿using DevLearningAPI.Models;
+using DevLearningAPI.Models.Dtos.Student;
+using DevLearningAPI.Repositories;
+using DevLearningStudentAPI.Services.Interfaces;
+
+namespace DevLearningStudentAPI.Services;
+
+public class StudentService : IStudentService
+{
+    private readonly StudentRepository _repository;
+
+    public StudentService(StudentRepository repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<List<StudentResponseDto>> GetAllStudentsAsync()
+    {
+        var students = await _repository.GetAllStudentsAsync();
+        return students.OrderBy(x => x.Name).ToList();
+    }
+
+    public async Task CreateStudentAsync(CreateStudentDto studentCreate)
+    {
+        var student = new Student(
+            studentCreate.Name,
+            studentCreate.Email,
+            studentCreate.Document,
+            studentCreate.Phone,
+            studentCreate.BirthDate
+         );
+
+        await _repository.CreateStudentAsync(student);
+    }
+
+    public async Task UpdateEmailStudentAsync(Guid studentId, UpdateStudentEmailDto dtoEmail)
+    {
+        await _repository.UpdateEmailStudentAsync(studentId, dtoEmail.Email);
+    }
+
+    public async Task UpdatePhoneStudentAsync(Guid studentId, UpdateStudentPhoneDto dtoPhone)
+    {
+        await _repository.UpdatePhoneStudentAsync(studentId, dtoPhone.Phone);
+    }
+
+    public async Task<bool> DeleteStudentAsync(Guid studentId)
+    {
+        return await _repository.DeleteStudentAsync(studentId);
+    }
+
+    public async Task<StudentResponseDto?> GetStudentByIdAsync(Guid studentId)
+    {
+        return await _repository.GetStudentByIdAsync(studentId);
+    }
+
+}
