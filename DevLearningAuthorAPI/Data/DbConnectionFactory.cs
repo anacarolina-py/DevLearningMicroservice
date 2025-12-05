@@ -4,7 +4,7 @@ namespace DevLearningAuthorAPI.Data;
 
 public class DbConnectionFactory
 {
-	private readonly string _connectionString;
+	private readonly string _connectionStrin;
 
 	public DbConnectionFactory(IConfiguration configuration)
 	{
@@ -13,6 +13,6 @@ public class DbConnectionFactory
 
 	public SqlConnection GetConnection()
 	{
-		return new SqlConnection(_connectionString);
+		return new SqlConnection(_connectionStrin);
 	}
 }
