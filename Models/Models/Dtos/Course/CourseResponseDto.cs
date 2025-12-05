@@ -1,5 +1,4 @@
-﻿using Azure;
-using System;
+﻿using System;
 
 namespace Models.Models.Dtos.Course;
 
