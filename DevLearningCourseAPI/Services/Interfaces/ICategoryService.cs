@@ -1,4 +1,5 @@
-﻿using DevLearningAPI.Models.Dtos.Category;
+﻿
+using Models.Models.Dtos.Category;
 
 namespace DevLearningCourseCategoryAPI.Services.Interfaces;
 

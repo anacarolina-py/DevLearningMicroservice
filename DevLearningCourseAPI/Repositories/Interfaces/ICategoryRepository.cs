@@ -1,5 +1,6 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Category;
+﻿
+using Models.Models;
+using Models.Models.Dtos.Category;
 
 namespace DevLearningCourseCategoryAPI.Repositories.Interfaces;
 

@@ -1,8 +1,8 @@
-﻿using DevLearningAPI.Models.Dtos.Category;
-using DevLearningCourseCategoryAPI.Services;
+﻿using DevLearningCourseCategoryAPI.Services;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Models.Dtos.Category;
 
 namespace DevLearningCourseCategoryAPI.Controllers
 {

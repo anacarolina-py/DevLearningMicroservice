@@ -1,16 +1,17 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Category;
-using DevLearningCourseCategoryAPI.Repositories;
+﻿using DevLearningCourseCategoryAPI.Repositories;
+using DevLearningCourseCategoryAPI.Repositories.Interfaces;
 using DevLearningCourseCategoryAPI.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
+using Models.Models;
+using Models.Models.Dtos.Category;
 
 namespace DevLearningCourseCategoryAPI.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly CategoryRepository _repository;
+    private readonly ICategoryRepository _repository;
 
-    public CategoryService(CategoryRepository repository)
+    public CategoryService(ICategoryRepository repository)
     {
         _repository = repository;
     }
