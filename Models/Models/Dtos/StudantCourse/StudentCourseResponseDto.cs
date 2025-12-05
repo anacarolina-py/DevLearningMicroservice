@@ -1,7 +1,11 @@
+<<<<<<< HEAD
 ﻿using Models.Models.Dtos.Course;
 using Models.Models.Dtos.Student;
 
 namespace Models.Models.Dtos.StudantCourse
+=======
+﻿namespace Models.Models.Dtos.StudantCourse
+>>>>>>> c6d20d2eab84d0303edf74bce267bbba4c484478
 {
     public class StudentCourseResponseDto
     {
