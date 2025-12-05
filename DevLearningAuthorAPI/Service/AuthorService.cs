@@ -2,6 +2,7 @@
 using DevLearningAuthorAPI.Service.Interfaces;
 using Models.Models;
 using Models.Models.Dtos.Author;
+using Models.Models.Dtos.Course;
 using MongoDB.Bson;
 
 namespace DevLearningAuthorAPI.Service;
@@ -9,10 +10,12 @@ namespace DevLearningAuthorAPI.Service;
 public class AuthorService : IAuthorService
 {
     private readonly AuthorRepository _repository;
+    private readonly HttpClient _httpClient;
 
-    public AuthorService(AuthorRepository repository)
+    public AuthorService(AuthorRepository repository, HttpClient httpClient)
     {
         _repository = repository;
+        _httpClient = httpClient;
     }
 
     public async Task<List<AuthorResponseDto>> GetAllActiveAuthorsAsync()
@@ -54,17 +57,8 @@ public class AuthorService : IAuthorService
         await _repository.UpdateTypeAuthorAsync(id);
     }
 
-    public async Task<bool> SelectAuthorByCourseAsync(ObjectId authorId)
+    public async Task<ContadorAuthorDto> SelectAuthorByCourseAsync(ObjectId authorId)
     {
-        var author = await _repository.SelectAuthorByCourseAsync(authorId);
-
-        if(author.Quantidade > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return await _repository.SelectAuthorByCourseAsync(authorId);
     } 
 }

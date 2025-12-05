@@ -16,6 +16,8 @@ builder.Services.Configure<MongoDbSettings>(
 
 builder.Services.AddScoped<DbConnectionFactory>();
 
+builder.Services.AddSingleton<HttpClient>();
+
 builder.Services.AddScoped<AuthorRepository>();
 builder.Services.AddScoped<AuthorService>();
 
