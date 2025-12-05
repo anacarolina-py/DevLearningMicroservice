@@ -1,5 +1,5 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Category;
+﻿using Models.Models;
+using Models.Models.Dtos.Category;
 using DevLearningCourseCategoryAPI.Repositories;
 using DevLearningCourseCategoryAPI.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
@@ -8,22 +8,22 @@ namespace DevLearningCourseCategoryAPI.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly CategoryRepository _repository;
+    private readonly CategoryRepository _categoryRepository;
 
-    public CategoryService(CategoryRepository repository)
+    public CategoryService(CategoryRepository categoryRepository)
     {
-        _repository = repository;
+        _categoryRepository = categoryRepository;
     }
 
     public async Task<List<CategoryResponseDto>> GetAllCategoriesAsync()
     {
-        var categories = await _repository.GetAllCategoriesAsync();
+        var categories = await _categoryRepository.GetAllCategoriesAsync();
         return categories.OrderBy(x => x.Title).ToList();
     }
 
     public async Task<CategoryResponseDto> GetCategoryByIdAsync(Guid id)
     {
-        return await _repository.GetCategoryByIdAsync(id);
+        return await _categoryRepository.GetCategoryByIdAsync(id);
     }
 
     public async Task CreateCategoryAsync(CreateCategoryDto category)
@@ -35,12 +35,12 @@ public class CategoryService : ICategoryService
                                        category.Description,
                                        category.Featured);
 
-        await _repository.CreateCategoryAsync(newCategory);
+        await _categoryRepository.CreateCategoryAsync(newCategory);
     }
 
     public async Task UpdateCategoryAsync(Guid id, UpdateCategoryDto categoryRequest)
     {
-        var category = await _repository.GetCategoryByIdAsync(id);
+        var category = await _categoryRepository.GetCategoryByIdAsync(id);
 
         var newCategory = new Category(
 
@@ -63,11 +63,16 @@ public class CategoryService : ICategoryService
                                  categoryRequest.Featured
                                       );
 
-        await _repository.UpdateCategoryAsync(id, newCategory);
+        await _categoryRepository.UpdateCategoryAsync(id, newCategory);
     }
 
     public async Task DeleteCategoryAsync(Guid id)
     {
-        await _repository.DeleteCategoryAsync(id);
+        if(await _categoryRepository.HasCourseAsync(id))
+        {
+            throw new ArgumentException("Não é possivel deletar um acetgoria que possui cursos associados");
+        }
+
+        await _categoryRepository.DeleteCategoryAsync(id);
     }
 }

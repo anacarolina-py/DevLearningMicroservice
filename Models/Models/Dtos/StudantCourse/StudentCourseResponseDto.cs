@@ -1,5 +1,5 @@
-﻿using DevLearningAPI.Models.Dtos.Course;
-using DevLearningAPI.Models.Dtos.Student;
+﻿using Models.Models.Dtos.Course;
+using Models.Models.Dtos.Student;
 
 namespace Models.Models.Dtos.StudantCourse
 {
