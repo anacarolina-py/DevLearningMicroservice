@@ -62,7 +62,7 @@ Ainda assim, foi criado um endpoint dedicado para futura implementação.
 A injeção de dependências agora inclui um HttpClient configurado para consumir o microserviço de Course, quando necessário.
 
 Endpoint criado
-GET /api/authors/course/{authorId}
+GET /api/course/author/{authorId}
 
 
 Atualmente, o endpoint retorna um NotImplemented ou uma estrutura básica, mas serve como ponto de integração caso a funcionalidade venha a ser necessária.
