@@ -1,8 +1,4 @@
 <Solution>
-  <Project Path="DevLearningAuthorAPI/DevLearningAuthorAPI.csproj" />
-  <Project Path="DevLearningCareerAPI/DevLearningCareerAPI.csproj" />
-  <Project Path="DevLearningCourseAPI/DevLearningCourseCategoryAPI.csproj" />
   <Project Path="DevLearningStudentAPI/DevLearningStudentAPI.csproj" />
   <Project Path="Models/Models.csproj" />
-  <Project Path="Utils/Utils.csproj" />
 </Solution>

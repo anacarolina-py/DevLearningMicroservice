@@ -1,6 +1,4 @@
-﻿using DevLearningAPI.Models.Dtos.Course;
-using DevLearningAPI.Models.Dtos.Student;
-
+﻿
 namespace Models.Models.Dtos.StudantCourse
 {
     public class StudentCourseResponseDto

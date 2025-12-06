@@ -1,7 +1,7 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Student;
-using DevLearningAPI.Repositories;
+﻿using DevLearningStudentAPI.Repositories;
 using DevLearningStudentAPI.Services.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Student;
 
 namespace DevLearningStudentAPI.Services;
 
