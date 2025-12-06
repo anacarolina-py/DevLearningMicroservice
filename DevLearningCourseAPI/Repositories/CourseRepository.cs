@@ -1,5 +1,4 @@
 ﻿using Dapper;
-
 using DevLearningCourseCategoryAPI.Data;
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
 using Models.Models;
@@ -175,7 +174,6 @@ public class CourseRepository : ICourseRepository
 
     public async Task DeleteCourseAsync(Guid id)
     {
-
         var sql = @"UPDATE Course SET Active = 0
                     WHERE Id = @Id";
 
@@ -201,7 +199,4 @@ public class CourseRepository : ICourseRepository
             return (await con.QueryAsync<CourseResponseDto>(sql)).ToList();
         }
     }
-
-
-
 }

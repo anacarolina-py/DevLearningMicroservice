@@ -1,5 +1,4 @@
-﻿
-using DevLearningCourseCategoryAPI.Repositories.Interfaces;
+﻿using DevLearningCourseCategoryAPI.Repositories.Interfaces;
 using DevLearningCourseCategoryAPI.Services.Interfaces;
 using Models.Models;
 using Models.Models.Dtos.Course;
@@ -9,10 +8,12 @@ namespace DevLearningCourseCategoryAPI.Services;
 public class CourseService : ICourseService
 {
 	private readonly ICourseRepository _repository;
+	private readonly ICategoryRepository _category;
 
-	public CourseService(ICourseRepository repository)
+	public CourseService(ICourseRepository repository, ICategoryRepository category)
 	{
 		_repository = repository;
+		_category = category;
 	}
 
 	public async Task<List<CourseResponseDto>> GetAllCoursesAsync()

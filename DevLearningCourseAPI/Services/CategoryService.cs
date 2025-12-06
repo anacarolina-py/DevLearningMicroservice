@@ -1,8 +1,11 @@
 ﻿using Models.Models;
 using Models.Models.Dtos.Category;
 using DevLearningCourseCategoryAPI.Repositories;
+using DevLearningCourseCategoryAPI.Repositories.Interfaces;
 using DevLearningCourseCategoryAPI.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
+using Models.Models;
+using Models.Models.Dtos.Category;
 
 namespace DevLearningCourseCategoryAPI.Services;
 
