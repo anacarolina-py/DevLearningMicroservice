@@ -1,17 +1,21 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Author;
-using DevLearningAuthorAPI.Repository;
+﻿using DevLearningAuthorAPI.Repository;
 using DevLearningAuthorAPI.Service.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Author;
+using Models.Models.Dtos.Course;
+using MongoDB.Bson;
 
 namespace DevLearningAuthorAPI.Service;
 
 public class AuthorService : IAuthorService
 {
     private readonly AuthorRepository _repository;
+    private readonly HttpClient _httpClient;
 
-    public AuthorService(AuthorRepository repository)
+    public AuthorService(AuthorRepository repository, HttpClient httpClient)
     {
         _repository = repository;
+        _httpClient = httpClient;
     }
 
     public async Task<List<AuthorResponseDto>> GetAllActiveAuthorsAsync()
@@ -25,69 +29,36 @@ public class AuthorService : IAuthorService
         return authors.OrderBy(x => x.Name).ToList();
     }
 
-    public async Task<AuthorResponseDto> GetAuthorByIdAsync(Guid id)
+    public async Task<AuthorResponseDto> GetAuthorByIdAsync(ObjectId id)
     {
         return await _repository.GetAuthorByIdAsync(id);
     }
 
     public async Task CreateAuthorAsync(CreateAuthorDto author)
     {
-        var newAuthor = new Author(
-            author.Name,
-            author.Title,
-            author.Image,
-            author.Bio,
-            author.Url,
-            author.Email
-            );
-
-        await _repository.CreateAuthorAsync(newAuthor);
+        try
+        {
+            await _repository.CreateAuthorAsync(author);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Error creating author {ex.Message}");
+        }
     }
 
-    public async Task UpdateAuthorAsync(Guid id, UpdateAuthorDto authorRequest)
+    public async Task UpdateAuthorAsync(ObjectId id, UpdateAuthorDto authorRequest)
     {
-        var author = await _repository.GetAuthorByIdAsync(id);
-
-        var newAuthor = new Author(
-            string.IsNullOrEmpty(authorRequest.Name)
-                                ? author.Name
-                                : authorRequest.Name,
-            string.IsNullOrEmpty(authorRequest.Title)
-                                ? author.Title
-                                : authorRequest.Title,
-            string.IsNullOrEmpty(authorRequest.Image)
-                                ? author.Image
-                                : authorRequest.Image,
-            string.IsNullOrEmpty(authorRequest.Bio)
-                                ? author.Bio
-                                : authorRequest.Bio,
-            string.IsNullOrEmpty(authorRequest.Url)
-                                ? author.Url
-                                : authorRequest.Url,
-            string.IsNullOrEmpty(authorRequest.Email)
-                                ? author.Email
-                                : authorRequest.Email
-            );
-
-        await _repository.UpdateAuthorAsync(id, newAuthor);
+       
+        await _repository.UpdateAuthorAsync(id, authorRequest);
     }
 
-    public async Task UpdateTypeAuthorAsync(Guid id)
+    public async Task UpdateTypeAuthorAsync(ObjectId id)
     {
         await _repository.UpdateTypeAuthorAsync(id);
     }
 
-    public async Task<bool> SelectAuthorByCourseAsync(Guid authorId)
+    public async Task<ContadorAuthorDto> SelectAuthorByCourseAsync(ObjectId authorId)
     {
-        var author = await _repository.SelectAuthorByCourseAsync(authorId);
-
-        if(author.Quantidade > 0)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return await _repository.SelectAuthorByCourseAsync(authorId);
     } 
 }

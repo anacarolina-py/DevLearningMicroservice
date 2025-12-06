@@ -1,18 +1,22 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.Extensions.Options;
+using Models.Models;
+using MongoDB.Driver;
 
 namespace DevLearningAuthorAPI.Data;
 
 public class DbConnectionFactory
 {
-	private readonly string _connectionString;
+    public readonly IMongoCollection<Author> mongoCollection;
 
-	public DbConnectionFactory(IConfiguration configuration)
-	{
-		_connectionString = configuration.GetConnectionString("DefaultConnection");
-	}
+    public DbConnectionFactory(IOptions<MongoDbSettings> mongoDbSettings)
+    {
+        MongoClient client = new MongoClient(mongoDbSettings.Value.ConnectionURI);
+        IMongoDatabase database = client.GetDatabase(mongoDbSettings.Value.DatabaseName);
+        mongoCollection = database.GetCollection<Author>(mongoDbSettings.Value.CollectionName);
+    }
 
-	public SqlConnection GetConnection()
-	{
-		return new SqlConnection(_connectionString);
-	}
+    public IMongoCollection<Author> GetMongoCollection()
+    {
+        return mongoCollection;
+    }
 }

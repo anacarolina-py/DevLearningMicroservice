@@ -1,8 +1,8 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Author;
-using DevLearningAPI.Models.Dtos.Course;
+﻿
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
 using DevLearningCourseCategoryAPI.Services.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Course;
 
 namespace DevLearningCourseCategoryAPI.Services;
 

@@ -1,7 +1,8 @@
-﻿using DevLearningAPI.Models.Dtos.Author;
-using DevLearningAuthorAPI.Service;
+﻿using DevLearningAuthorAPI.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Models.Dtos.Author;
+using MongoDB.Bson;
 
 namespace DevLearningAuthorAPI.Controllers
 {
@@ -53,7 +54,7 @@ namespace DevLearningAuthorAPI.Controllers
         }
 
         [HttpGet("{id}")]
-		public async Task<ActionResult<AuthorResponseDto>> GetAuthorByIdAsync(Guid id)
+		public async Task<ActionResult<AuthorResponseDto>> GetAuthorByIdAsync(ObjectId id)
 		{
 			try
 			{
@@ -86,7 +87,7 @@ namespace DevLearningAuthorAPI.Controllers
 		}
 
 		[HttpPut("{id}")]
-		public async Task<ActionResult> UpdateAuthorAsync(Guid id, UpdateAuthorDto authorRequest)
+		public async Task<ActionResult> UpdateAuthorAsync(ObjectId id, UpdateAuthorDto authorRequest)
 		{
 			try
 			{
@@ -104,17 +105,12 @@ namespace DevLearningAuthorAPI.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult> UpdateTypeAuthorAsync(Guid id)
+		public async Task<ActionResult> UpdateTypeAuthorAsync(ObjectId id)
 		{
 			try
 			{
                 if (_service.GetAuthorByIdAsync(id) is null)
                     return NotFound("Register not found!");
-
-                if (await _service.SelectAuthorByCourseAsync(id))
-				{
-					return BadRequest("Não foi possível inutilizar o autor: vínculo entre autor e curso já existe.");
-				}
 
 				await _service.UpdateTypeAuthorAsync(id);
 
@@ -124,6 +120,20 @@ namespace DevLearningAuthorAPI.Controllers
 			{
 				return Problem(ex.Message);
 			}
+		}
+
+		[HttpGet("{id}/courses")]
+		public async Task<ActionResult> SelectAuthorCoursesAsync(string authorId)
+		{
+			if (!ObjectId.TryParse(authorId, out ObjectId objectId))
+				return BadRequest("Id Inválido");
+
+			var result = await _service.SelectAuthorByCourseAsync(objectId);
+
+			if (result is null)
+				return NotFound("Nenhum curso encontrado para esse autor");
+
+			return Ok(result);
 		}
 	}
 }
