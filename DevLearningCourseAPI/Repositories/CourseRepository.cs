@@ -1,9 +1,9 @@
 ﻿using Dapper;
-using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Author;
-using DevLearningAPI.Models.Dtos.Course;
+
 using DevLearningCourseCategoryAPI.Data;
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Course;
 
 namespace DevLearningCourseCategoryAPI.Repositories;
 
