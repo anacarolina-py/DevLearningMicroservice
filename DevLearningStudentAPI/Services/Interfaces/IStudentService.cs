@@ -1,5 +1,4 @@
-﻿using DevLearningAPI.Models.Dtos.Student;
-using Microsoft.AspNetCore.Mvc;
+﻿using Models.Models.Dtos.Student;
 
 namespace DevLearningStudentAPI.Services.Interfaces;
 

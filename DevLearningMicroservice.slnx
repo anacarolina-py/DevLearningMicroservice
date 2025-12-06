@@ -1,5 +1,7 @@
 <Solution>
+  <Project Path="DevLearningStudentAPI/DevLearningStudentAPI.csproj" />
+  <Project Path="DevLearningAuthorAPI/DevLearningAuthorAPI.csproj" />
+  <Project Path="DevLearningCourseCategoryAPI/DevLearningCourseCategoryAPI.csproj" Id="bfcda7b2-903c-41e3-aba7-efa747743374" />
   <Project Path="DevLearningCourseAPI/DevLearningCourseCategoryAPI.csproj" />
   <Project Path="Models/Models.csproj" />
-  <Project Path="Utils/Utils.csproj" />
 </Solution>
