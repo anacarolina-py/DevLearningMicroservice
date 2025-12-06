@@ -1,6 +1,0 @@
-@DevLearningCourseCategoryAPI_HostAddress = http://localhost:5080
-
-GET {{DevLearningCourseCategoryAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

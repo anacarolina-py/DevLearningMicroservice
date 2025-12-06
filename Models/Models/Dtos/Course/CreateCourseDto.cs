@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿
-=======
-﻿using System;
->>>>>>> c6d20d2eab84d0303edf74bce267bbba4c484478
+
 
 namespace Models.Models.Dtos.Course;
 
