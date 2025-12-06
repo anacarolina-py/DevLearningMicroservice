@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="DevLearningStudentAPI/DevLearningStudentAPI.csproj" />
   <Project Path="DevLearningAuthorAPI/DevLearningAuthorAPI.csproj" />
   <Project Path="DevLearningCourseAPI/DevLearningCourseAPI.csproj" />
+  <Project Path="DevLearningStudentAPI/DevLearningStudentAPI.csproj" />
   <Project Path="Models/Models.csproj" />
 </Solution>
