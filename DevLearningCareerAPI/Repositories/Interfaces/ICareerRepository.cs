@@ -1,5 +1,6 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Career;
+﻿
+using Models.Models;
+using Models.Models.Dtos.Career;
 
 namespace DevLearningCareerAPI.Repositories.Interfaces
 {

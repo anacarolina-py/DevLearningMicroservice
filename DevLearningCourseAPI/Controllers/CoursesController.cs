@@ -1,6 +1,7 @@
-﻿using DevLearningAPI.Models.Dtos.Course;
-using DevLearningCourseCategoryAPI.Services.Interfaces;
+﻿using DevLearningCourseCategoryAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Models.Models.Dtos.Course;
+
 
 namespace DevLearningCourseCategoryAPI.Controllers
 {

@@ -1,4 +1,4 @@
-﻿using DevLearningAPI.Models.Dtos.StudantCourse;
+﻿using Models.Models.Dtos.StudantCourse;
 
 namespace DevLearningStudentAPI.Services.Interfaces
 {

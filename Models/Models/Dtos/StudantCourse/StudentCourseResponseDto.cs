@@ -1,4 +1,5 @@
-﻿namespace Models.Models.Dtos.StudantCourse
+
+namespace Models.Models.Dtos.StudantCourse
 {
     public class StudentCourseResponseDto
     {

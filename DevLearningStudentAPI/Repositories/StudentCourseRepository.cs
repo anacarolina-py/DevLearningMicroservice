@@ -1,11 +1,9 @@
-
 using Dapper;
-using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Course;
-using DevLearningAPI.Models.Dtos.StudantCourse;
-using DevLearningAPI.Models.Dtos.Student;
 using DevLearningStudentAPI.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
+using DevLearningStudentAPI.Repositories.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Course;
+using Models.Models.Dtos.StudantCourse;
 
 namespace DevLearningStudentAPI.Repositories
 {
