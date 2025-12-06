@@ -6,7 +6,7 @@ using Models.Models.Dtos.Course;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace DevLearningAuthorAPI.Repository;
+namespace DevLearningAuthorAPI.Repository { 
 
 public class AuthorRepository : IAuthorRepository
 {
