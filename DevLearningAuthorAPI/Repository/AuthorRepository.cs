@@ -1,96 +1,158 @@
-﻿using Dapper;
-using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Author;
-using DevLearningAuthorAPI.Data;
+﻿using DevLearningAuthorAPI.Data;
 using DevLearningAuthorAPI.Repository.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Author;
+using Models.Models.Dtos.Course;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace DevLearningAuthorAPI.Repository;
 
 public class AuthorRepository : IAuthorRepository
 {
+	private readonly IMongoCollection<Author> _authorsCollection;
 	private readonly DbConnectionFactory _connection;
-
-	public AuthorRepository(DbConnectionFactory connection)
+	private readonly ILogger<AuthorRepository> _logger;
+	private readonly HttpClient _httpClient;
+	
+	public AuthorRepository(DbConnectionFactory connection, 
+		ILogger<AuthorRepository> logger,
+		HttpClient httpClient)
 	{
 		_connection = connection;
+		_authorsCollection = _connection.GetMongoCollection();
+		_logger = logger;
+		_httpClient = httpClient;
+		_httpClient.BaseAddress = new Uri("https://localhost7242/api/course/author/id");
 	}
 
 	public async Task<List<AuthorResponseDto>> GetAllActiveAuthorsAsync()
 	{
-		var sql = "SELECT [Id], [Name], [Title], [Image], [Bio], [Url], [Email], [Type] FROM Author WHERE [Type] = 1";
 
-		using (var con = _connection.GetConnection())
+		var authors = await _authorsCollection.Find(author => author.Type == 1).ToListAsync();
+
+		return authors.Select(author => new AuthorResponseDto
 		{
-			return (await con.QueryAsync<AuthorResponseDto>(sql)).ToList();
+			Id = author.Id.ToString(),
+			Name = author.Name,
+			Title = author.Title,
+			Image = author.Image,
+			Bio = author.Bio,
+			Url = author.Url,
+			Email = author.Email,
+			Type = author.Type
+
+		}).ToList();
+
+	}
+
+	public async Task<List<AuthorResponseDto>> GetAllAuthorsAsync()
+	{
+		var authors = await _authorsCollection.Find(_ => true).ToListAsync();
+
+		return authors.Select(author => new AuthorResponseDto
+		{
+			Id = author.Id.ToString(),
+			Name = author.Name,
+			Title = author.Title,
+			Image = author.Image,
+			Bio = author.Bio,
+			Url = author.Url,
+			Email = author.Email,
+			Type = author.Type
+
+		}).ToList();
+	}
+
+	public async Task<AuthorResponseDto> GetAuthorByIdAsync(ObjectId id)
+	{
+
+		var author = await _authorsCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
+
+		if (author == null)
+			return null;
+
+		return new AuthorResponseDto
+		{
+			Id = author.Id.ToString(),
+			Name = author.Name,
+			Title = author.Title,
+			Image = author.Image,
+			Bio = author.Bio,
+			Url = author.Url,
+			Email = author.Email,
+			Type = author.Type
+
+		};
+	}
+
+	public async Task CreateAuthorAsync(CreateAuthorDto author)
+	{
+		try
+		{
+			var newAuthor = new Author(
+
+				author.Name,
+				author.Title,
+				author.Image,
+				author.Bio,
+				author.Url,
+				author.Email
+
+				);
+
+			await _authorsCollection.InsertOneAsync(newAuthor);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError($"Error creating author");
+
 		}
 	}
 
-    public async Task<List<AuthorResponseDto>> GetAllAuthorsAsync()
-    {
-        var sql = "SELECT [Id], [Name], [Title], [Image], [Bio], [Url], [Email], [Type] FROM Author";
-
-        using (var con = _connection.GetConnection())
-        {
-            return (await con.QueryAsync<AuthorResponseDto>(sql)).ToList();
-        }
-    }
-
-    public async Task<AuthorResponseDto> GetAuthorByIdAsync(Guid id)
+	public async Task UpdateAuthorAsync(ObjectId id, UpdateAuthorDto author)
 	{
-		var sql = "SELECT [Id], [Name], [Title], [Image], [Bio], [Url], [Email], [Type] FROM Author WHERE Id = @Id";
+		var updateAuthor = new Author(
+			author.Name,
+			author.Title,
+			author.Image,
+			author.Bio,
+			author.Url,
+			author.Email
+			);
 
-		using (var con = _connection.GetConnection())
+		var updateResult = await _authorsCollection.ReplaceOneAsync
+			(a => a.Id == id, updateAuthor);
+
+		if (updateResult.MatchedCount == 0)
 		{
-			return await con.QueryFirstOrDefaultAsync<AuthorResponseDto>(sql, new{Id = id});
-		}
-    }
-
-	public async Task CreateAuthorAsync(Author author)
-	{
-		var sql = @"INSERT INTO Author ([Id], [Name], [Title], [Image], [Bio], [Url], [Email], [Type]) 
-					Values (@Id, @Name, @Title, @Image, @Bio, @Url, @Email, @Type)";
-
-		using (var con = _connection.GetConnection())
-		{
-			await con.ExecuteAsync(sql,
-				new {Id = author.Id, Name = author.Name, Title = author.Title, Image = author.Image, Bio = author.Bio, 
-				Url = author.Url, Email = author.Email, Type = author.Type});
+			_logger.LogWarning($"No author with this id found to update");
 		}
 	}
 
-	public async Task UpdateAuthorAsync(Guid id, Author author)
+	public async Task UpdateTypeAuthorAsync(ObjectId id)
 	{
-		var sql = @"UPDATE Author 
-					SET [Name] = @Name, [Title] = @Title, [Image] = @Image, [Bio] = @Bio, [Url] = @Url, [Email] = @Email 
-					WHERE Id = @Id";
+		var author = await _authorsCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
 
-		using (var con = _connection.GetConnection())
-		{
-			await con.ExecuteAsync(sql, new { author.Name, author.Title, author.Image, author.Bio, author.Url, author.Email, id });
-		}
+		if (author == null) return;
+
+		var newType = author.Type == 0 ? 1 : 0;
+
+		var update = Builders<Author>.Update.Set(a => a.Type, newType);
+
+		await _authorsCollection.UpdateOneAsync(a => a.Id == id, update);
 	}
 
-	public async Task UpdateTypeAuthorAsync(Guid id)
+	public async Task<ContadorAuthorDto> SelectAuthorByCourseAsync(ObjectId authorId)
 	{
-		var sql = @"UPDATE Author 
-					SET [Type] = CASE [Type] WHEN 0 THEN 1
-										   WHEN 1 THEN 0
-										   END
-					WHERE Id = @Id";
+		Guid authorGuid;
 
-		using(var con = _connection.GetConnection())
-		{
-			await con.ExecuteAsync(sql, new { Id = id });
-		}
-	}
+		if(!Guid.TryParse(authorId.ToString(), out authorGuid))
+			return null;
 
-	public async Task<ContadorAuthorDto?> SelectAuthorByCourseAsync(Guid authorId)
-	{
-		var sql = @"SELECT COUNT(Id) AS Quantidade FROM Course WHERE AuthorId = @AuthorId";
+		var result = await _httpClient.GetFromJsonAsync<ContadorAuthorDto>($"author/{authorGuid}");
 
-		using (var con = _connection.GetConnection())
-		{
-			return await con.QueryFirstOrDefaultAsync<ContadorAuthorDto>(sql, new { authorId });	
+		return result;
 		}
 	}
 }

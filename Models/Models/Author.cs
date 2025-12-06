@@ -1,4 +1,6 @@
-﻿namespace Models.Models;
+﻿using MongoDB.Bson;
+
+namespace Models.Models;
 
 public class Author(
     string name, 
@@ -9,7 +11,7 @@ public class Author(
     string email
     )
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public ObjectId Id { get; private set; } 
     public string Name { get; private set; } = name;
     public string Title { get; private set; } = title;
     public string Image { get; private set; } = image;

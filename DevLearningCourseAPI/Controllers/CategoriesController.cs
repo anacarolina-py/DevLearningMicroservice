@@ -1,4 +1,5 @@
-﻿using DevLearningCourseCategoryAPI.Services;
+﻿using Models.Models.Dtos.Category;
+using DevLearningCourseCategoryAPI.Services;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,11 @@ namespace DevLearningCourseCategoryAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly CategoryService _service;
+        private readonly CategoryService _categoryService;
 
-        public CategoriesController(CategoryService service)
+        public CategoriesController(CategoryService categoryService)
         {
-            _service = service;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -22,7 +23,7 @@ namespace DevLearningCourseCategoryAPI.Controllers
 		{
             try
             {
-                var categories = await _service.GetAllCategoriesAsync();
+                var categories = await _categoryService.GetAllCategoriesAsync();
 
                 if (categories.Count is 0)
                     return NotFound("Register not found!");
@@ -40,7 +41,7 @@ namespace DevLearningCourseCategoryAPI.Controllers
         {
             try
             {
-                var category = await _service.GetCategoryByIdAsync(id);
+                var category = await _categoryService.GetCategoryByIdAsync(id);
 
                 if (category is null)
                     return NotFound("Register not found!");
@@ -58,7 +59,7 @@ namespace DevLearningCourseCategoryAPI.Controllers
         {
             try
             {
-                await _service.CreateCategoryAsync(category);
+                await _categoryService.CreateCategoryAsync(category);
                 return Created();
             }
             catch (Exception ex)
@@ -72,12 +73,12 @@ namespace DevLearningCourseCategoryAPI.Controllers
         {
             try
             {
-                var category = await _service.GetCategoryByIdAsync(id);
+                var category = await _categoryService.GetCategoryByIdAsync(id);
 
                 if (category is null)
                     return NotFound("Register not found!");
 
-                await _service.UpdateCategoryAsync(id, categoryRequest);
+                await _categoryService.UpdateCategoryAsync(id, categoryRequest);
                 return NoContent();
             }
             catch(Exception ex)
@@ -91,14 +92,18 @@ namespace DevLearningCourseCategoryAPI.Controllers
         {
             try
             {
-                var category = await _service.GetCategoryByIdAsync(id);
+                var category = await _categoryService.GetCategoryByIdAsync(id);
 
                 if (category is null)
                     return NotFound("Register not found!");
 
-                await _service.DeleteCategoryAsync(id);
+                await _categoryService.DeleteCategoryAsync(id);
                 return NoContent();
+            }catch(ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
+
             catch (Exception ex)
             {
                 return Problem(ex.Message);

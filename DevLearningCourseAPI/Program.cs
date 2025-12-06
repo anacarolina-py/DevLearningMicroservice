@@ -11,11 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddSingleton<DbConnectionFactory>();
-builder.Services.AddScoped<ICourseService, CourseService>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddSingleton<ICourseRepository, CourseRepository>();
+builder.Services.AddSingleton<CategoryRepository>();
+
+builder.Services.AddSingleton<ICourseService, CourseService>();
+builder.Services.AddSingleton<CategoryService>();
 
 
 var app = builder.Build();
