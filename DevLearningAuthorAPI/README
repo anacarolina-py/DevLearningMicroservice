@@ -1,1 +1,106 @@
+📚 Author Microservice — Documentação da Refatoração
 
+Este documento descreve as mudanças realizadas durante a migração e refatoração do microserviço Author, anteriormente parte de uma API monolítica em SQL Server, para o novo ecossistema de microserviços utilizando MongoDB.
+
+🏗️ Contexto da Refatoração
+
+O projeto original consistia em uma API única que concentrava múltiplos domínios. Como parte do processo de quebra em microserviços, o domínio Author foi isolado em seu próprio serviço.
+
+Durante essa refatoração:
+
+O módulo de Author foi migrado de SQL Server para MongoDB.
+
+O repositório foi completamente reescrito para o driver do MongoDB.
+
+O service e controller foram mantidos com ajustes mínimos.
+
+A injeção de dependências foi reestruturada para suportar o novo banco e a comunicação entre microserviços.
+
+Um endpoint adicional foi criado para possibilitar futura integração com o microserviço de Course.
+
+🔄 Principais Alterações
+1. 🗄️ Migração de SQL Server para MongoDB
+
+Antes, o serviço utilizava Dapper com SQL Server.
+
+Agora, a persistência foi migrada para MongoDB, incluindo:
+
+Criação de modelos compatíveis com documentos MongoDB.
+
+Ajuste das configurações de conexão em appsettings.json.
+
+Criação de índices e coleções (quando necessário).
+
+2. 📁 Atualização da Camada de Repositório
+
+O repositório foi totalmente adaptado:
+
+Substituição dos métodos baseados em Dapper por operações Mongo (Find, InsertOne, ReplaceOne, etc.).
+
+Uso de interfaces para manter o contrato original.
+
+Manutenção da assinatura dos métodos usados pelo serviço.
+
+3. 🧩 Camada de Service e Controller
+
+Não houve mudanças significativas nessas camadas:
+
+O comportamento externo do microserviço foi preservado.
+
+Apenas ajustes pontuais foram feitos para compatibilidade com o novo repositório.
+
+🔗 Comunicação com o Microserviço de Course
+
+O microserviço de Author possui uma funcionalidade chamada SelectAuthorByCourse, que na arquitetura original dependia diretamente do banco SQL Server.
+
+Durante a refatoração:
+
+Identificou-se que essa função não estava implementada e não era utilizada.
+
+Ainda assim, foi criado um endpoint dedicado para futura implementação.
+
+A injeção de dependências agora inclui um HttpClient configurado para consumir o microserviço de Course, quando necessário.
+
+Endpoint criado
+GET /api/authors/course/{authorId}
+
+
+Atualmente, o endpoint retorna um NotImplemented ou uma estrutura básica, mas serve como ponto de integração caso a funcionalidade venha a ser necessária.
+
+🧩 Injeção de Dependência
+
+As dependências foram reorganizadas para:
+
+Registrar o cliente MongoDB e a base.
+
+Adicionar um HttpClient para comunicação com o microserviço Course.
+
+
+✔️ Status da Função SelectAuthorByCourse
+
+Endpoint criado	✔️
+Integração com API Course	✔️ (estrutura pronta)
+Implementação da funcionalidade	⏳ Ainda não necessária
+Uso atual no sistema	❌ Não utilizada
+
+A decisão foi manter o endpoint preparado, mas sem lógica completa, até que o time valide a real necessidade da funcionalidade.
+
+📦 Estrutura Final do Microserviço
+/src
+  /Controllers
+  /Data
+  /Services
+  /Repositories
+  /Models/Dtos
+
+
+📝 Considerações Finais
+
+A refatoração deixou o microserviço: 
+- isolado e independente,
+
+- com armazenamento orientado a documentos (MongoDB),
+
+- preparado para comunicação entre microserviços,
+
+- pronto para crescimento incremental sem necessidade de retrabalho.
