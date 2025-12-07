@@ -8,7 +8,7 @@ public class DbConnectionFactory
 
 	public DbConnectionFactory(IConfiguration configuration)
 	{
-		_connectionString = configuration.GetConnectionString("DefaultConnection");
+		_connectionString = configuration.GetConnectionString("SqlServer");
 	}
 
 	public SqlConnection GetConnection()

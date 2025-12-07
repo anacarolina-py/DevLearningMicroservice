@@ -2,10 +2,9 @@
 {
     public class ItemsResponseDto
     {
-        public Guid Id { get; set; }
+        public Guid CourseId{ get; set; }
 
-        public string CourseTitle { get; set; }
-
+        public string TitleCourse { get; set; }
         public string Title { get; set; }
 
         public string Description { get; set; }
