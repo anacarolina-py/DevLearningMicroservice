@@ -302,50 +302,56 @@ Cria uma carreira.
 
 📁 Estrutura Recomendada dos Projetos
 
- /DevLearning
- ├── Models/                  → Projeto compartilhado entre todas as APIs
- │     ├── Entities/
- │     └── DTOs/
- │
- ├── Students.Api/
- │     ├── Controllers/
- │     ├── Data/
- │     ├── Repository/
- │     │     └── Interfaces/
- │     ├── Service/
- │     │     └── Interfaces/
- │     └── Program.cs
- │
- ├── Courses.Api/
- │     ├── Controllers/
- │     │     ├── CoursesController.cs
- │     │     └── CategoriesController.cs
- │     ├── Data/
- │     ├── Repository/
- │     │     └── Interfaces/
- │     ├── Service/
- │     │     └── Interfaces/
- │     └── Program.cs
- │
- ├── Career.Api/
- │     ├── Controllers/
- │     ├── Data/
- │     ├── Repository/
- │     │     └── Interfaces/
- │     ├── Service/
- │     │     └── Interfaces/
- │     └── Program.cs
- │
- ├── Authors.Api/
- │     ├── Controllers/
- │     ├── Data/
- │     ├── Repository/
- │     │     └── Interfaces/
- │     ├── Service/
- │     │     └── Interfaces/
- │     └── Program.cs
- │
- └── docker-compose.yml
+DevLearning/
+│
+├── Models/                          → Projeto compartilhado entre todas as APIs
+│   ├── Entities/
+│   ├── DTOs/
+│   └── Interfaces/
+│
+├── Students.Api/
+│   ├── Controllers/
+│   ├── Data/
+│   ├── Repository/
+│   ├── Interfaces/
+│   ├── Service/
+│   └── Program.cs
+│
+├── Courses.Api/
+│   ├── Controllers/
+│   │   └── CoursesController.cs
+│   ├── Data/
+│   ├── Repository/
+│   ├── Interfaces/
+│   ├── Service/
+│   └── Program.cs
+│
+├── Categories.Api/
+│   ├── Controllers/
+│   │   └── CategoriesController.cs
+│   ├── Data/
+│   ├── Repository/
+│   ├── Interfaces/
+│   ├── Service/
+│   └── Program.cs
+│
+├── Career.Api/
+│   ├── Controllers/
+│   ├── Data/
+│   ├── Repository/
+│   ├── Interfaces/
+│   ├── Service/
+│   └── Program.cs
+│
+├── Authors.Api/
+│   ├── Controllers/
+│   ├── Data/
+│   ├── Repository/
+│   ├── Interfaces/
+│   ├── Service/
+│   └── Program.cs
+│
+└── docker-compose.yml
 
 🧩 Descrição dos Projetos
 🟦 1. Models (Compartilhado entre todas as APIs)
@@ -354,21 +360,23 @@ Cria uma carreira.
 
 Contém:
 
-/Models
- ├── Entities/
- │     ├── Student.cs
- │     ├── Course.cs
- │     ├── Category.cs
- │     ├── Author.cs
- │     ├── Career.cs
- │     └── CareerItem.cs
- └── DTOs/
-       ├── StudentDto.cs
-       ├── CourseDto.cs
-       ├── AuthorDto.cs
-       ├── CategoryDto.cs
-       ├── CareerDto.cs
-       └── CareerItemDto.cs
+Models/
+│
+├── Entities/
+│   ├── Student.cs
+│   ├── Course.cs
+│   ├── Category.cs
+│   ├── Author.cs
+│   ├── Career.cs
+│   └── CareerItem.cs
+│
+└── DTOs/
+    ├── StudentDto.cs
+    ├── CourseDto.cs
+    ├── AuthorDto.cs
+    ├── CategoryDto.cs
+    ├── CareerDto.cs
+    └── CareerItemDto.cs
 
 
 Funções:
@@ -379,62 +387,86 @@ Evita duplicação de classes
 
 Permite consistência na comunicação entre APIs
 
-🟦 2. Students.Api
-/Students.Api
- ├── Controllers/
- ├── Data/
- ├── Repository/
- │     └── Interfaces/
- ├── Service/
- │     └── Interfaces/
- └── (usa Models compartilhado)
+🟦 2. 🟦 2. Students.ApiStudents.Api
 
+/DevLearningStudents.Api
+│
+├── Controllers/
+│
+├── Data/
+│
+├── Repository/
+│   └── Interfaces/
+│
+├── Service/
+│   └── Interfaces/
+│
+└── (usa Models compartilhado)
 
 Consome: Courses API
 
 Banco: SQL Server
 
-🟦 3. Courses.Api (inclui Category)
-/Courses.Api
- ├── Controllers/
- │     ├── CoursesController.cs
- │     └── CategoriesController.cs
- ├── Data/
- ├── Repository/
- │     └── Interfaces/
- ├── Service/
- │     └── Interfaces/
- └── (usa Models compartilhado)
+🟦 3. DevLearningCourses.Api (inclui Category)
+
+/DevLearningCourses.Api
+│
+├── Controllers/
+│   ├── CoursesController.cs
+│   └── CategoriesController.cs
+│
+├── Data/
+│
+├── Repository/
+│   └── Interfaces/
+│
+├── Service/
+│   └── Interfaces/
+│
+└── (usa Models compartilhado)
 
 
 Consome: Authors API
 
 Banco: SQL Server
 
-🟦 4. Career.Api
-/Career.Api
- ├── Controllers/
- ├── Data/
- ├── Repository/
- │     └── Interfaces/
- ├── Service/
- │     └── Interfaces/
- └── (usa Models compartilhado)
+🟦 4. DevLearningCareer.Api
+/DevLearningCareer.Api
+│
+├── Controllers/
+│
+├── Data/
+│
+├── Repository/
+│   └── Interfaces/
+│
+├── Service/
+│   └── Interfaces/
+│
+└── (usa Models compartilhado)
+
 
 
 Consome: Courses API
 
 Banco: SQL Server
 
-🟦 5. Authors.Api
-/Authors.Api
- ├── Controllers/
- ├── Data/
- ├── Repository/
- │     └── Interfaces/
- ├── Service/
- │     └── Interfaces/
- └── (usa Models compartilhado)
+🟦 5. DevLearningAuthor.Api
+
+/DevLearningAuthor.Api
+│
+├── Controllers/
+│
+├── Data/
+│
+├── Repository/
+│   └── Interfaces/
+│
+├── Service/
+│   └── Interfaces/
+│
+└── (usa Models compartilhado)
+
 
 
 Banco: MongoDB
