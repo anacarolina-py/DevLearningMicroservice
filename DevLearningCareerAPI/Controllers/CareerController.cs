@@ -1,4 +1,5 @@
-﻿using DevLearningCareerAPI.Controllers.Interfaces;
+﻿
+using DevLearningCareerAPI.Controllers.Interfaces;
 using DevLearningCareerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -73,8 +74,8 @@ namespace DevLearningCareerAPI.Controllers
             
         }
 
-        [HttpPut("{careerId}")]
-        public async Task<ActionResult> UpdateCareerAsync(Guid careerId,UpdateCareerDto careerRequest)
+        [HttpPut("Update/{careerId}")]
+        public async Task<ActionResult> UpdateCareerAsync(Guid careerId, [FromBody]UpdateCareerDto careerRequest)
         {
             try
             {
