@@ -21,9 +21,7 @@ public class CourseService : ICourseService
 
 	public async Task<List<CourseResponseDto>> GetAllCoursesAsync()
 	{
-        return await _repository.GetAllCoursesOrderedAsync();
-        //var courses = await _repository.GetAllActivesCoursesAsync();
-        //return courses.OrderBy(x => x.Title).ToList();
+        return await _repository.GetAllActivesCoursesAsync();
 	}
 
 	public async Task<CourseResponseDto?> GetCourseByIdAsync(Guid id)

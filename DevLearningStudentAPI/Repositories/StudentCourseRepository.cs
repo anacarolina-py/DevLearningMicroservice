@@ -10,64 +10,70 @@ namespace DevLearningStudentAPI.Repositories
     public class StudentCourseRepository
     {
         private readonly DbConnectionFactory _connection;
-
-        public StudentCourseRepository(DbConnectionFactory connection)
+        private readonly HttpClient _httpClientCourse;
+        public StudentCourseRepository(DbConnectionFactory connection, HttpClient httpClientCourse)
         {
             _connection = connection;
+            _httpClientCourse = httpClientCourse;
         }
 
         public async Task<List<StudentCourseResponseDto>> GetAllStudentCoursesAsync()
         {
-            var sql = @"SELECT s.Id AS StuId, s.Name, s.Email, s.Document, s.Phone, s.Birthdate, s.CreateDate AS StudentCreateDate,
+            var sql = @"SELECT
                         sc.Progress, 
                         sc.[Favorite], 
                         sc.StartDate, 
                         sc.LastUpdateDate AS RelationLastUpdateDate,
-                        sc.StudentId,
-                        sc.CourseId, 
-                        c.Id, c.Tag, c.Title, c.Summary, c.Url, c.DurationInMinutes, c.Level, c.CreateDate AS CourseCreateDate,
-                        c.LastUpdateDate  AS CourseLastUpdateDate, c.Active, c.Free, c.Featured, c.Tags, 
-                        a.Name AS AuthorName, ca.Title AS CategoryName
+                        sc.StudentId as StudentId,
+                        sc.CourseId as CourseId,
+                        s.Birthdate,
+                        s.Id as StudentId,
+                        s.Name,
+                        s.Email,
+                        s.Document,
+                        s.Phone,
+                        s.CreateDate
                     FROM Student s
                     INNER JOIN StudentCourse sc
-                    ON sc.StudentId = s.Id
-                    JOIN Course c
-                    ON c.Id = sc.CourseId
-                    JOIN Author a
-                    ON c.AuthorId = a.Id
-                    JOIN Category ca
-                    ON c.CategoryId = ca.Id";
+                    ON sc.StudentId = s.Id";
 
             using (var con = _connection.GetConnection())
             {
-                var studentDictionary = new Dictionary<Guid, StudentCourseResponseDto>();
+                var studentsCourse = await con.QueryAsync<StudentCourseDTO>(sql);
+                var courses = await this._httpClientCourse.GetFromJsonAsync<List<CourseResponseDto>>("");
+                var grouped = studentsCourse.GroupBy(sc => sc.StudentId);
+                var result = new List<StudentCourseResponseDto>();
+                foreach (var group in grouped)
+                {
+                    var first = group.First();
 
-                await con.QueryAsync<StudentCourseResponseDto, StudentCourse, CourseResponseDto, StudentCourseResponseDto>(
-                     sql,
-                     (student, studentCourse, course) =>
-                     {
-                         if (!studentDictionary.TryGetValue(student.StuId, out var studentEntry))  //studentEntry recebe o valor do dicionario se a chave ja existir
-                         {
-                             studentEntry = student;
-                             studentDictionary.Add(studentEntry.StuId, studentEntry);
-                         }
+                    var courseWithRelation = group.Select(sc =>
+                    {
+                        var course = courses.FirstOrDefault(c => c.Id == sc.CourseId);
 
-                         var courseWithRelation = new CourseWithRelationDto
-                         {
-                             Course = course,
-                             Progress = GetProgressStudentCourseAsync(student.StuId, course.Id).Result,
-                             Favorite = studentCourse.Favorite,
-                             StartDate = studentCourse.StartDate,
-                             LastUpdateDate = studentCourse.RelationLastUpdateDate
-                         };
+                        return new CourseWithRelationDto
+                        {
+                            Favorite = sc.Favorite,
+                            Progress = sc.Progress,
+                            LastUpdateDate = sc.RelationLastUpdateDate,
+                            StartDate = sc.StartDate,
+                            Course = course
+                        };
+                    }).ToList();
+                    result.Add(new StudentCourseResponseDto
+                    {
+                        StudentId = first.StudentId,
+                        Birthdate = first.Birthdate,
+                        Courses = courseWithRelation,
+                        CreateDate = first.CreateDate,
+                        Document = first.Document,
+                        Email = first.Email,
+                        Name = first.Name,
+                        Phone = first.Phone
+                    });
+                }
 
-                         studentEntry.Courses.Add(courseWithRelation);
-
-                         return studentEntry;
-                     },
-                     splitOn: "StuId,Progress,Id"
-                 );
-                return studentDictionary.Values.ToList();
+                return result;
             }
         }
 
@@ -94,14 +100,14 @@ namespace DevLearningStudentAPI.Repositories
 
         public async Task<int?> GetCourseDurationInMinutesAsync(Guid courseId)
         {
-            var sql = @"SELECT DurationInMinutes
-                              FROM Course
-                              WHERE Id = @CourseId";
+            var course = await this._httpClientCourse.GetFromJsonAsync<CourseResponseDto>(courseId.ToString());
 
-            using (var con = _connection.GetConnection())
-            {
-                return await con.QueryFirstOrDefaultAsync<int?>(sql, new { CourseId = courseId });
-            }
+            if (course is null)
+                return null;
+
+            var duration = course.DurationInMinutes;
+
+            return duration;
         }
 
         public async Task<byte> GetProgressStudentCourseAsync(Guid studentId, Guid courseId)
@@ -140,9 +146,6 @@ namespace DevLearningStudentAPI.Repositories
                         FROM StudentCourse
                         WHERE StudentId = @StudentId AND CourseId = @CourseId";
 
-
-                //bool newValue = !favorite;
-
                 var sqlUpdate = @"UPDATE StudentCourse
                               SET Favorite = CASE Favorite WHEN 0 THEN 1
                                              WHEN 1 THEN 0
@@ -150,12 +153,6 @@ namespace DevLearningStudentAPI.Repositories
                               LastUpdateDate = GETDATE()
                               WHERE StudentId = @StudentId 
                               AND CourseId = @CourseId";
-
-                /*@"UPDATE Career
-                    SET Active = CASE Active WHEN 0 THEN 1
-                                             WHEN 1 THEN 0
-                                             END
-                    WHERE Id = @CareerId;";*/
 
                 await con.ExecuteAsync(sqlUpdate,
                     new { StudentId = studentId, CourseId = courseId });
