@@ -10,7 +10,7 @@ public class CreateCourseDto
     public int DurationInMinutes { get; init; }
     public bool Free { get; init; }
     public bool Featured { get; init; }
-    public Guid AuthorId { get; init; } = Guid.Empty;
+    public string AuthorId { get; init; } = string.Empty;
     public Guid CategoryId { get; init; } = Guid.Empty;
     public string Tags { get; init; } = string.Empty;
 }

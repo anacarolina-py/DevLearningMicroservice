@@ -1,6 +1,9 @@
 ﻿using DevLearningCourseCategoryAPI.Repositories.Interfaces;
 using DevLearningCourseCategoryAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Models.Models;
+using Models.Models.Dtos.Author;
 using Models.Models.Dtos.Course;
 
 namespace DevLearningCourseCategoryAPI.Services;
@@ -8,18 +11,19 @@ namespace DevLearningCourseCategoryAPI.Services;
 public class CourseService : ICourseService
 {
 	private readonly ICourseRepository _repository;
-	private readonly ICategoryRepository _category;
+	private readonly HttpClient _httpClienteAuthor;
 
-	public CourseService(ICourseRepository repository, ICategoryRepository category)
+	public CourseService(ICourseRepository repository, HttpClient httpAuthor)
 	{
 		_repository = repository;
-		_category = category;
+		_httpClienteAuthor = httpAuthor;
 	}
 
 	public async Task<List<CourseResponseDto>> GetAllCoursesAsync()
 	{
-		var courses = await _repository.GetAllActivesCoursesAsync();
-        return courses.OrderBy(x => x.Title).ToList();
+        return await _repository.GetAllCoursesOrderedAsync();
+        //var courses = await _repository.GetAllActivesCoursesAsync();
+        //return courses.OrderBy(x => x.Title).ToList();
 	}
 
 	public async Task<CourseResponseDto?> GetCourseByIdAsync(Guid id)
@@ -34,6 +38,13 @@ public class CourseService : ICourseService
 
 	public async Task CreateCourseAsync(CreateCourseDto courseDto)
 	{
+		var author = await _httpClienteAuthor.GetFromJsonAsync<AuthorResponseDto>(courseDto.AuthorId.ToString());
+
+		if(author is null)
+		{
+			throw new Exception("Author not found!");
+		}
+
 		var course = new Course(
 			courseDto.Tag,
 			courseDto.Title,
@@ -84,7 +95,7 @@ public class CourseService : ICourseService
 			courseDto.Active,
 			courseDto.Free,
 			courseDto.Featured,
-			courseDto.AuthorId == Guid.Empty
+			string.IsNullOrEmpty(courseDto.AuthorId)
 					  ? authorCategory.AuthorId
 					  : courseDto.AuthorId,
 			courseDto.CategoryId == Guid.Empty
