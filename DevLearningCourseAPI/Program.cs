@@ -18,6 +18,8 @@ builder.Services.AddSingleton<CategoryRepository>();
 builder.Services.AddSingleton<ICourseService, CourseService>();
 builder.Services.AddSingleton<CategoryService>();
 
+builder.Services.AddHttpClient<ICourseService, CourseService>(client => client.BaseAddress = new Uri("https://localhost:7037/api/Author/"));
+
 
 var app = builder.Build();
 

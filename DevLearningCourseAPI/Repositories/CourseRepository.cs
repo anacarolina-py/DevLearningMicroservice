@@ -63,7 +63,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task CreateCourseAsync(Course course)
     {
-        var sql = @"INSERT INTO Course ([Id], 
+        var sql = @"INSERT INTO Course ([Id],
 										[Tag], 
 										[Title], 
 										[Summary], 
