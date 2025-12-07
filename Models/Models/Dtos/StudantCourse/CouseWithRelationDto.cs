@@ -9,5 +9,11 @@ namespace Models.Models.Dtos.StudantCourse
         public bool Favorite { get; init; }
         public DateTime StartDate { get; init; }
         public DateTime LastUpdateDate { get; init; }
+
+        public CourseWithRelationDto()
+        {
+            Course = new CourseResponseDto();
+        }
     }
+
 }

@@ -361,7 +361,3 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/DevLearningStudentAPI/DevLearningStudentAPI.csproj
-/DevLearningCareerAPI/DevLearningCareerAPI.csproj
-/DevLearningCourseAPI/DevLearningCourseCategoryAPI.csproj
-/DevLearningStudentAPI/DevLearningStudentAPI.csproj

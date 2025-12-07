@@ -10,9 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddHttpClient<StudentCourseRepository>(client => client.BaseAddress = new Uri("https://localhost:7242/api/courses/"));
+
 builder.Services.AddSingleton<DbConnectionFactory>();
 builder.Services.AddSingleton<StudentRepository>();
-builder.Services.AddSingleton<StudentCourseRepository>();
 builder.Services.AddSingleton<StudentService>();
 builder.Services.AddSingleton<StudentCourseService>();
 
