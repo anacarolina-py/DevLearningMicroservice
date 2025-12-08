@@ -1,5 +1,6 @@
 ﻿using DevLearningStudentAPI.Repositories;
 using Models.Models;
+using Models.Models.Dtos.Course;
 using Models.Models.Dtos.StudantCourse;
 
 namespace DevLearningStudentAPI.Services
@@ -11,6 +12,11 @@ namespace DevLearningStudentAPI.Services
         public StudentCourseService(StudentCourseRepository repository)
         {
             _repository = repository;
+        }
+
+        public async Task<CourseStudentContadorDto> GetCountStudentCourseAsync(Guid courseId)
+        {
+            return await _repository.SelectCourseByStudentAsync(courseId);
         }
 
         public async Task<List<StudentCourseResponseDto>> GetAllStudentCoursesAsync()

@@ -1,8 +1,10 @@
-﻿using DevLearningCareerAPI.Repositories.Interfaces;
+﻿
+using DevLearningCareerAPI.Repositories.Interfaces;
 using DevLearningCareerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models.Models;
 using Models.Models.Dtos.CareerItem;
+using Models.Models.Dtos.Course;
 
 namespace DevLearningCareerAPI.Services
 {
@@ -11,10 +13,12 @@ namespace DevLearningCareerAPI.Services
 
         #region RepositoryDependecyInjection
         private readonly ICareerItemRepository _careerItemRepository;
+        private readonly HttpClient _httpClientCourse;
 
-        public CareerItemService(ICareerItemRepository careerItemRepository)
+        public CareerItemService(ICareerItemRepository careerItemRepository, HttpClient httpClientCourse)
         {
             _careerItemRepository = careerItemRepository;
+            _httpClientCourse = httpClientCourse;
         }
         #endregion
 
@@ -28,6 +32,19 @@ namespace DevLearningCareerAPI.Services
                                                 careerItem.Order
                                               );
             await _careerItemRepository.CreateCareerItemAsync(newCareerItem);
+        }
+
+        public async Task<CourseResponseDto?> GetCourseByIdAsync(Guid id)
+        {
+            try
+            {
+                var course = await _httpClientCourse.GetFromJsonAsync<CourseResponseDto>(id.ToString());
+                return course;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<CareerItemResponseDto> GetCareerItemByCareerIdAsync(Guid careerId)

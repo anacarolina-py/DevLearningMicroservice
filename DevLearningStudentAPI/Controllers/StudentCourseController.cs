@@ -1,6 +1,7 @@
 ﻿using DevLearningStudentAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Models.Dtos.Course;
 using Models.Models.Dtos.StudantCourse;
 
 namespace DevLearningStudentAPI.Controllers
@@ -14,6 +15,12 @@ namespace DevLearningStudentAPI.Controllers
         public StudentCourseController(StudentCourseService service)
         {
             _service = service;
+        }
+
+        [HttpGet("{idCourse}")]
+        public async Task<ActionResult<CourseStudentContadorDto>> GetCountStudentCourseAsync(Guid idCourse)
+        {
+            return await _service.GetCountStudentCourseAsync(idCourse);
         }
 
         [HttpGet]

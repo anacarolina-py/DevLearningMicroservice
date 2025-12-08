@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Models.Models.Dtos.CareerItem;
+using Models.Models.Dtos.Course;
 
 namespace DevLearningCareerAPI.Services.Interfaces
 {
     public interface ICareerItemService
     {
         Task CreateCareeritemAsync(CreateCareerItemDto careerItem);
+        Task<CourseResponseDto?> GetCourseByIdAsync(Guid id);
 
         Task<CareerItemResponseDto> GetCareerItemByCareerIdAsync(Guid careerId);
 

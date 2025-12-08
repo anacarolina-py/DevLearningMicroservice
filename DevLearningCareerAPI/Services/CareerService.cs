@@ -1,4 +1,5 @@
-﻿using DevLearningCareerAPI.Repositories.Interfaces;
+﻿
+using DevLearningCareerAPI.Repositories.Interfaces;
 using DevLearningCareerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models.Models;
@@ -59,9 +60,9 @@ namespace DevLearningCareerAPI.Services
                 careerRequest.DurationInMinutes is 0
                                         ? career.DurationInMinutes
                                         : careerRequest.DurationInMinutes,
-                careerRequest.Featured is false
-                                        ? career.Featured
-                                        : careerRequest.Featured,
+                careerRequest.Featured.HasValue
+                                        ? careerRequest.Featured
+                                        : career.Featured,
                 string.IsNullOrEmpty(careerRequest.Tags)
                                         ? career.Tags
                                         : careerRequest.Tags

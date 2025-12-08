@@ -1,3 +1,4 @@
+using DevLearningCourseCategoryAPI.Controllers;
 using DevLearningCourseCategoryAPI.Data;
 using DevLearningCourseCategoryAPI.Repositories;
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
