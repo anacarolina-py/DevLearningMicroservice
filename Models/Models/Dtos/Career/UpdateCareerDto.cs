@@ -12,7 +12,7 @@
 
         public bool Active { get; init; } = false;
 
-        public bool Featured { get; init; } = false;
+        public bool? Featured { get; init; } = false;
 
         public string Tags { get; init; } = string.Empty;
     }

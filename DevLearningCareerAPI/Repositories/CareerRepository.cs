@@ -169,7 +169,6 @@ public class CareerRepository : ICareerRepository
                                          Summary = @CareerSumary,
                                          Url = @CareerUrl,
                                          DurationInMinutes = @CareerDurationInMinutes,
-                                         Active = @CareerActive,
                                          Featured = @CareerFeatured,
                                          Tags = @CareerTags
                                      WHERE Id = @CareerId;";
@@ -181,7 +180,6 @@ public class CareerRepository : ICareerRepository
                 CareerSumary = career.Summary,
                 CareerUrl = career.Url,
                 CareerDurationInMinutes = career.DurationInMinutes,
-                CareerActive = career.Active,
                 CareerFeatured = career.Featured,
                 CareerTags = career.Tags
             });
