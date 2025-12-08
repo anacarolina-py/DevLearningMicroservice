@@ -13,6 +13,5 @@ public interface ICourseRepository
 	public Task DeleteCourseAsync(Guid id);
 	public Task<AuthorCategoryDto> GetAuthorCategoryId(Guid id);
 	public Task ActiveCourseAsync(Guid id);
-	public Task<CourseStudentContadorDto?> SelectCourseByStudentAsync(Guid courseId);
     public Task<List<CourseResponseDto>> GetAllCoursesOrderedAsync();
 }

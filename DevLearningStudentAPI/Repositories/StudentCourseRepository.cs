@@ -17,6 +17,16 @@ namespace DevLearningStudentAPI.Repositories
             _httpClientCourse = httpClientCourse;
         }
 
+        public async Task<CourseStudentContadorDto?> SelectCourseByStudentAsync(Guid courseId)
+        {
+            var sql = @"SELECT COUNT(CourseId) AS Quantidade FROM StudentCourse WHERE CourseId = @CourseId";
+
+            using (var con = _connection.GetConnection())
+            {
+                return await con.QueryFirstOrDefaultAsync<CourseStudentContadorDto>(sql, new { courseId });
+            }
+        }
+
         public async Task<List<StudentCourseResponseDto>> GetAllStudentCoursesAsync()
         {
             var sql = @"SELECT

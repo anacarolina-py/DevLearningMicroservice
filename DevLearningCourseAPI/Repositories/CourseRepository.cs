@@ -165,15 +165,7 @@ public class CourseRepository : ICourseRepository
         }
     }
 
-    public async Task<CourseStudentContadorDto?> SelectCourseByStudentAsync(Guid courseId)
-    {
-        var sql = @"SELECT COUNT(CourseId) AS Quantidade FROM StudentCourse WHERE CourseId = @CourseId";
-
-        using (var con = _connection.GetConnection())
-        {
-            return await con.QueryFirstOrDefaultAsync<CourseStudentContadorDto>(sql, new { courseId });
-        }
-    }
+    
 
     public async Task ActiveCourseAsync(Guid id)
     {
@@ -203,7 +195,6 @@ public class CourseRepository : ICourseRepository
 					   co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags, ca.[Title] AS CategoryName, co.[AuthorId]
 				FROM Course co
 				JOIN Category ca ON co.CategoryId = ca.Id
-				WHERE co.Active = 1
 				ORDER BY co.Title ASC";
 
 

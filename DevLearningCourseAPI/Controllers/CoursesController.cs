@@ -10,10 +10,12 @@ namespace DevLearningCourseCategoryAPI.Controllers
 	public class CoursesController : ControllerBase
 	{
 		private readonly ICourseService _service;
+		private readonly HttpClient _httpClientStudentCourse;
 
-		public CoursesController(ICourseService service)
+		public CoursesController(ICourseService service, IHttpClientFactory httpClientStudentCourse)
 		{
 			_service = service;
+			_httpClientStudentCourse = httpClientStudentCourse.CreateClient();
 		}
 
         [HttpGet]
@@ -127,8 +129,8 @@ namespace DevLearningCourseCategoryAPI.Controllers
 				if (await _service.GetCourseByIdAsync(id) is null)
 					return NotFound("Register not found!");
 
-
-                if (await _service.SelectCourseByStudentAsync(id))
+				var existCourse = await _httpClientStudentCourse.GetFromJsonAsync<CourseStudentContadorDto>($"https://localhost:7115/api/StudentCourse/{id.ToString()}");
+                if (existCourse.Quantidade > 0)
                 {
                     return BadRequest("Não foi possível inutilizar o curso: vínculo entre aluno e curso já existe.");
                 }
