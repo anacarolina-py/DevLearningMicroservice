@@ -112,23 +112,39 @@ public class AuthorRepository : IAuthorRepository
 
 	public async Task UpdateAuthorAsync(ObjectId id, UpdateAuthorDto author)
 	{
-		var updateAuthor = new Author(
-			author.Name,
-			author.Title,
-			author.Image,
-			author.Bio,
-			author.Url,
-			author.Email
-			);
+            var updates = new List<UpdateDefinition<Author>>();
+            var builder = Builders<Author>.Update;
 
-		var updateResult = await _authorsCollection.ReplaceOneAsync
-			(a => a.Id == id, updateAuthor);
+            if (!string.IsNullOrWhiteSpace(author.Name))
+                updates.Add(builder.Set(a => a.Name, author.Name));
 
-		if (updateResult.MatchedCount == 0)
-		{
-			_logger.LogWarning($"No author with this id found to update");
-		}
-	}
+            if (!string.IsNullOrWhiteSpace(author.Title))
+                updates.Add(builder.Set(a => a.Title, author.Title));
+
+            if (!string.IsNullOrWhiteSpace(author.Image))
+                updates.Add(builder.Set(a => a.Image, author.Image));
+
+            if (!string.IsNullOrWhiteSpace(author.Bio))
+                updates.Add(builder.Set(a => a.Bio, author.Bio));
+
+            if (!string.IsNullOrWhiteSpace(author.Url))
+                updates.Add(builder.Set(a => a.Url, author.Url));
+
+            if (!string.IsNullOrWhiteSpace(author.Email))
+                updates.Add(builder.Set(a => a.Email, author.Email));
+
+
+            if (author.Type.HasValue)
+                updates.Add(builder.Set(a => a.Type, author.Type.Value));
+
+            if (!updates.Any())
+                return;
+
+            await _authorsCollection.UpdateOneAsync(
+                a => a.Id == id,
+                builder.Combine(updates)
+            );
+        }
 
 	public async Task UpdateTypeAuthorAsync(ObjectId id)
 	{

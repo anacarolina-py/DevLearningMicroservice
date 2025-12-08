@@ -4,4 +4,5 @@
   <Project Path="DevLearningCourseAPI/DevLearningCourseAPI.csproj" />
   <Project Path="DevLearningStudentAPI/DevLearningStudentAPI.csproj" />
   <Project Path="Models/Models.csproj" />
+  <Project Path="Utils/Utils.csproj" />
 </Solution>

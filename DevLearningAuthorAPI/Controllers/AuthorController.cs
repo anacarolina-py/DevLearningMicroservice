@@ -122,18 +122,19 @@ namespace DevLearningAuthorAPI.Controllers
 			}
 		}
 
-		[HttpGet("{id}/courses")]
+		[HttpGet("/course/author/{id}")]
 		public async Task<ActionResult> SelectAuthorCoursesAsync(string authorId)
 		{
-			if (!ObjectId.TryParse(authorId, out ObjectId objectId))
-				return BadRequest("Id Inválido");
+			throw new NotImplementedException();
+			//if (!ObjectId.TryParse(authorId, out ObjectId objectId))
+			//	return BadRequest("Id Inválido");
 
-			var result = await _service.SelectAuthorByCourseAsync(objectId);
+			//var result = await _service.SelectAuthorByCourseAsync(objectId);
 
-			if (result is null)
-				return NotFound("Nenhum curso encontrado para esse autor");
+			//if (result is null)
+			//	return NotFound("Nenhum curso encontrado para esse autor");
 
-			return Ok(result);
+			//return Ok(result);
 		}
 	}
 }
