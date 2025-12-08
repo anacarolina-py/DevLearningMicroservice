@@ -1,8 +1,9 @@
 ﻿using Dapper;
-using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Category;
+using Models.Models;
+using Models.Models.Dtos.Category;
 using DevLearningCourseCategoryAPI.Data;
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
+using Models.Models.Dtos.Category;
 
 namespace DevLearningCourseCategoryAPI.Repositories;
 
@@ -59,6 +60,16 @@ public class CategoryRepository : ICategoryRepository
 			await con.ExecuteAsync(sql, new { category.Title, category.Url, category.Summary, category.Order, 
 											  category.Description, category.Featured, id});
 		}
+	}
+
+	public async Task<bool> HasCourseAsync(Guid categoryId)
+	{
+		var sql = "SELECT COUNT(*) FROM Course WHERE CategoryId = @Id";
+        using (var con = _connection.GetConnection())
+        {
+            var count = await con.ExecuteScalarAsync<int>(sql, new { Id = categoryId });
+            return count > 0;
+        }
 	}
 
 	public async Task DeleteCategoryAsync(Guid id)

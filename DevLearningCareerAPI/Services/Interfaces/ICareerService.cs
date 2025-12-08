@@ -1,5 +1,5 @@
-﻿using DevLearningAPI.Models.Dtos.Career;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Models.Models.Dtos.Career;
 
 namespace DevLearningCareerAPI.Services.Interfaces
 {

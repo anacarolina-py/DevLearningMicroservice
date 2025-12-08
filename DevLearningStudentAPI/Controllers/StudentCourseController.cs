@@ -1,7 +1,7 @@
-﻿using DevLearningAPI.Models.Dtos.StudantCourse;
-using DevLearningStudentAPI.Services;
+﻿using DevLearningStudentAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models.Models.Dtos.StudantCourse;
 
 namespace DevLearningStudentAPI.Controllers
 {
@@ -59,7 +59,7 @@ namespace DevLearningStudentAPI.Controllers
                 if (!await _service.GetRelationStudentCourseAsync(studentId, courseId))
                     return BadRequest();
 
-                await _service.UpdateCourseProgressAsync(studentId, courseId, minutesWatched);
+                 await _service.UpdateCourseProgressAsync(studentId, courseId, minutesWatched);
                 return NoContent();
             }
             catch (Exception)

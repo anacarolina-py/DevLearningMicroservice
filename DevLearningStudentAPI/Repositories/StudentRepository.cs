@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Student;
 using DevLearningStudentAPI.Data;
 using DevLearningStudentAPI.Repositories.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Student;
 
 namespace DevLearningStudentAPI.Repositories;
 

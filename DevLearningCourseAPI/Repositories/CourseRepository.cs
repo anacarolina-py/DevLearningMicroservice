@@ -1,54 +1,67 @@
 ﻿using Dapper;
-using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.Author;
-using DevLearningAPI.Models.Dtos.Course;
 using DevLearningCourseCategoryAPI.Data;
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
+using Models.Models;
+using Models.Models.Dtos.Author;
+using Models.Models.Dtos.Course;
 
 namespace DevLearningCourseCategoryAPI.Repositories;
 
 public class CourseRepository : ICourseRepository
 {
     private readonly DbConnectionFactory _connection;
-
-    public CourseRepository(DbConnectionFactory connection)
+    private readonly HttpClient _httpClienteAuthor;
+    public CourseRepository(DbConnectionFactory connection, HttpClient httpClienteAuthor)
     {
         _connection = connection;
+        _httpClienteAuthor = httpClienteAuthor;
     }
 
     public async Task<List<CourseResponseDto>> GetAllActivesCoursesAsync()
     {
         var sql = @"SELECT co.Id, co.Tag, co.Title, co.Summary, co.Url, co.DurationInMinutes, co.Level, 
-                           co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags,      
-						   a.[Name] AS AuthorName, ca.[Title] AS CategoryName 
-					FROM Course co
-					JOIN Author a
-					ON co.AuthorId = a.Id
-					JOIN Category ca
-					ON co.CategoryId = ca.Id
-					ORDER BY co.Title ASC";
+                    co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags, co.[AuthorId], ca.[Title] AS CategoryName 
+					FROM Course co INNER JOIN Category ca ON co.CategoryId = ca.Id 
+                    WHERE co.Active = 1
+                    ORDER BY co.Title ASC";
 
         using (var con = _connection.GetConnection())
         {
-            return (await con.QueryAsync<CourseResponseDto>(sql)).ToList();
+            var courses = (await con.QueryAsync<CourseResponseDto>(sql)).ToList();
+            var author = await _httpClienteAuthor.GetFromJsonAsync<List<AuthorResponseDto>>("");
+
+            foreach (var course in courses)
+            {
+                var authorId = author?.FirstOrDefault(a => a.Id == course.AuthorId);
+                if (authorId != null)
+                {
+                    course.AuthorName = authorId.Name;
+                }
+            }
+            return courses;
         }
     }
 
     public async Task<CourseResponseDto?> GetCourseByIdAsync(Guid id)
     {
-        var sql = @"SELECT co.Id, co.Tag, co.Title, co.Summary, co.Url, co.DurationInMinutes, co.Level,  
-                           co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags,    
-						   a.[Name] AS AuthorName, ca.[Title] AS CategoryName 
+        var sql = @"SELECT co.Id, co.Tag, co.Title, co.Summary, co.Url, co.DurationInMinutes, co.Level, 
+                    co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags, co.[AuthorId], ca.[Title] AS CategoryName 
 					FROM Course co
-					JOIN Author a
-					ON co.AuthorId = a.Id
 					JOIN Category ca
 					ON co.CategoryId = ca.Id
 					WHERE co.Id = @Id";
 
         using (var con = _connection.GetConnection())
         {
-            return await con.QueryFirstOrDefaultAsync<CourseResponseDto>(sql, new { id });
+            var course = await con.QueryFirstOrDefaultAsync<CourseResponseDto>(sql, new { id });
+            var author = await _httpClienteAuthor.GetFromJsonAsync<List<AuthorResponseDto>>("");
+
+            var authorId = author?.FirstOrDefault(a => a.Id == course.AuthorId);
+            if (authorId != null)
+            {
+                course.AuthorName = authorId.Name;
+            }
+            return course;
         }
     }
 
@@ -64,7 +77,7 @@ public class CourseRepository : ICourseRepository
 
     public async Task CreateCourseAsync(Course course)
     {
-        var sql = @"INSERT INTO Course ([Id], 
+        var sql = @"INSERT INTO Course ([Id],
 										[Tag], 
 										[Title], 
 										[Summary], 
@@ -175,7 +188,6 @@ public class CourseRepository : ICourseRepository
 
     public async Task DeleteCourseAsync(Guid id)
     {
-
         var sql = @"UPDATE Course SET Active = 0
                     WHERE Id = @Id";
 
@@ -188,20 +200,27 @@ public class CourseRepository : ICourseRepository
     public async Task<List<CourseResponseDto>> GetAllCoursesOrderedAsync()
     {
         var sql = @"SELECT co.Id, co.Tag, co.Title, co.Summary, co.Url, co.DurationInMinutes, co.Level, 
-					   co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags,      
-					   a.[Name] AS AuthorName, ca.[Title] AS CategoryName 
+					   co.CreateDate, co.LastUpdateDate, co.Active, co.Free, co.Featured, co.Tags, ca.[Title] AS CategoryName, co.[AuthorId]
 				FROM Course co
-				JOIN Author a ON co.AuthorId = a.Id
 				JOIN Category ca ON co.CategoryId = ca.Id
 				WHERE co.Active = 1
 				ORDER BY co.Title ASC";
 
+
         using (var con = _connection.GetConnection())
         {
-            return (await con.QueryAsync<CourseResponseDto>(sql)).ToList();
+            var author = await _httpClienteAuthor.GetFromJsonAsync<List<AuthorResponseDto>>("");
+            var courses = (await con.QueryAsync<CourseResponseDto>(sql)).ToList();
+
+            foreach (var course in courses)
+            {
+                var authorId = author?.FirstOrDefault(a => a.Id == course.AuthorId);
+                if (authorId != null)
+                {
+                    course.AuthorName = authorId.Name;
+                }
+            }
+            return courses;
         }
     }
-
-
-
 }

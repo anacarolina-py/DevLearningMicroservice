@@ -1,4 +1,3 @@
-﻿using Azure;
 using System;
 
 namespace Models.Models.Dtos.Course;
@@ -16,8 +15,9 @@ public class CourseResponseDto
 	public DateTime LastUpdateDate { get; init; }
 	public bool Active { get; init; } 
 	public bool Free { get; init; } 
-	public bool Featured { get; init; } 
-	public string AuthorName { get; init; } = string.Empty;
+	public bool Featured { get; init; }
+	public string AuthorId { get; set; } = string.Empty;
+	public string AuthorName { get; set; } = string.Empty;
 	public string CategoryName { get; init; } = string.Empty;
 	public string Tags { get; init; } = string.Empty;
 }

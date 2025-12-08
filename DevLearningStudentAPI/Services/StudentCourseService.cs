@@ -1,7 +1,6 @@
-﻿using DevLearningAPI.Models;
-using DevLearningAPI.Models.Dtos.StudantCourse;
-using DevLearningAPI.Repositories;
-using Microsoft.AspNetCore.Mvc;
+﻿using DevLearningStudentAPI.Repositories;
+using Models.Models;
+using Models.Models.Dtos.StudantCourse;
 
 namespace DevLearningStudentAPI.Services
 {
