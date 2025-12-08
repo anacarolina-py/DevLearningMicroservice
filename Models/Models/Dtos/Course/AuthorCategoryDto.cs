@@ -2,6 +2,6 @@
 
 public class AuthorCategoryDto
 {
-	public Guid AuthorId { get; init; } = Guid.Empty;
+	public string AuthorId { get; init; } = string.Empty;
 	public Guid CategoryId { get; init; } = Guid.Empty;
 }

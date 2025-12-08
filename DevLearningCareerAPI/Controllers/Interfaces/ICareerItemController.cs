@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Models.Models.Dtos.CareerItem;
 
 namespace DevLearningCareerAPI.Controllers.Interfaces

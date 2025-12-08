@@ -9,7 +9,7 @@ public class Course(
 	bool active, 
 	bool free, 
 	bool featured, 
-	Guid authorId, 
+	string authorId, 
 	Guid categoryId, 
 	string tags
 	)
@@ -26,7 +26,7 @@ public class Course(
 	public bool Active { get; private set; } = active;
 	public bool Free { get; private set; } = free;
 	public bool Featured { get; private set; } = featured;
-	public Guid AuthorId { get; private set; } = authorId;
+	public string AuthorId { get; private set; } = authorId;
 	public Guid CategoryId { get; private set; } = categoryId;
 	public string Tags { get; private set; } = tags;
 }

@@ -3,7 +3,7 @@ namespace Models.Models.Dtos.StudantCourse
 {
     public class StudentCourseResponseDto
     {
-        public Guid StuId { get; init; }
+        public Guid StudentId { get; init; }
         public string Name { get; init; } = string.Empty;
         public string Email { get; init; } = string.Empty;
         public string Document { get; init; } = string.Empty;

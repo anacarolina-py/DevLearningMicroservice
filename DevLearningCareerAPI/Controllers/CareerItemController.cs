@@ -1,4 +1,5 @@
-﻿using DevLearningCareerAPI.Controllers.Interfaces;
+﻿
+using DevLearningCareerAPI.Controllers.Interfaces;
 using DevLearningCareerAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,13 @@ namespace DevLearningCareerAPI.Controllers
 
         private readonly ICareerService _careerService;
 
-        private readonly ICourseService _courseService;
+        
 
-        public CareerItemController(ICareerItemService careerItemService, ICareerService careerService, ICourseService courseService)
+        public CareerItemController(ICareerItemService careerItemService, ICareerService careerService)
         {
             _careerItemService = careerItemService;
             _careerService = careerService;
-            _courseService = courseService;
+            
         }
         #endregion
 
@@ -31,7 +32,7 @@ namespace DevLearningCareerAPI.Controllers
             try
             {
                 var careerFound = await _careerService.GetCareerByIdAsync(careerItem.CareerId);
-                var courseFound = await _courseService.GetCourseByIdAsync(careerItem.CourseId);
+                var courseFound = await _careerItemService.GetCourseByIdAsync(careerItem.CourseId);
 
                 if (careerFound is null || careerFound.Active is false)
                     return NotFound("Career does not exist or is inactive!");

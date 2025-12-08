@@ -1,3 +1,4 @@
+using DevLearningCourseCategoryAPI.Controllers;
 using DevLearningCourseCategoryAPI.Data;
 using DevLearningCourseCategoryAPI.Repositories;
 using DevLearningCourseCategoryAPI.Repositories.Interfaces;
@@ -13,10 +14,13 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<DbConnectionFactory>();
 
 builder.Services.AddSingleton<ICourseRepository, CourseRepository>();
-builder.Services.AddSingleton<CategoryRepository>();
+builder.Services.AddSingleton<CategoryRepository>();    
 
 builder.Services.AddSingleton<ICourseService, CourseService>();
 builder.Services.AddSingleton<CategoryService>();
+
+builder.Services.AddHttpClient<ICourseService, CourseService>(client => client.BaseAddress = new Uri("https://localhost:7037/api/Author/"));
+builder.Services.AddHttpClient<ICourseRepository, CourseRepository>(client => client.BaseAddress = new Uri("https://localhost:7037/api/Author/"));
 
 
 var app = builder.Build();
